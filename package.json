@@ -86,11 +86,11 @@
     "url": "https://github.com/utc8/global-agent"
   },
   "scripts": {
-    "build": "del-cli ./dist && tsc",
+    "build": "del-cli ./dist && tsc -p tsconfig.build.json",
     "lint": "eslint ./src ./test && tsc",
     "test": "ava --verbose --serial",
     "create-readme": "gitdown ./.README/README.md --output-file ./README.md"
   },
   "typings": "./dist/src/index.d.ts",
-  "version": "3.2.0"
+  "version": "3.3.0"
 }
