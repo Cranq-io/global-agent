@@ -1,6 +1,7 @@
 export {
-  default as createGlobalProxyAgent,
+  createGlobalProxyAgent,
 } from './createGlobalProxyAgent';
 export {
-  default as createProxyController,
+  createProxyController,
+  ProxyController,
 } from './createProxyController';

@@ -3,4 +3,6 @@ export {
 } from './routines';
 export {
   createGlobalProxyAgent,
+  createProxyController,
+  ProxyController
 } from './factories';

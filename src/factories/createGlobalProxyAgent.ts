@@ -24,7 +24,8 @@ import {
   isUrlMatchingNoProxy,
   parseProxyUrl,
 } from '../utilities';
-import createProxyController from './createProxyController';
+import {createProxyController} from './createProxyController';
+import {ProxyController} from './createProxyController';
 
 const httpGet = http.get;
 const httpRequest = http.request;
@@ -57,19 +58,15 @@ const createConfiguration = (configurationInput: ProxyAgentConfigurationInputTyp
   };
 };
 
-export default (configurationInput: ProxyAgentConfigurationInputType = defaultConfigurationInput) => {
+
+export function createGlobalProxyAgent(configurationInput: ProxyAgentConfigurationInputType = defaultConfigurationInput, _proxyController?: ProxyController) {
   const configuration = createConfiguration(configurationInput);
 
-  const proxyController = createProxyController();
-
-  // eslint-disable-next-line node/no-process-env
-  proxyController.HTTP_PROXY = process.env[configuration.environmentVariableNamespace + 'HTTP_PROXY'] ?? null;
-
-  // eslint-disable-next-line node/no-process-env
-  proxyController.HTTPS_PROXY = process.env[configuration.environmentVariableNamespace + 'HTTPS_PROXY'] ?? null;
-
-  // eslint-disable-next-line node/no-process-env
-  proxyController.NO_PROXY = process.env[configuration.environmentVariableNamespace + 'NO_PROXY'] ?? null;
+  const proxyController: ProxyController = _proxyController || createProxyController({
+    HTTP_PROXY: process.env[configuration.environmentVariableNamespace + 'HTTP_PROXY'] ?? null,
+    HTTPS_PROXY: process.env[configuration.environmentVariableNamespace + 'HTTPS_PROXY'] ?? null,
+    NO_PROXY: process.env[configuration.environmentVariableNamespace + 'NO_PROXY'] ?? null
+  });
 
   log.info({
     configuration,

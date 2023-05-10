@@ -1,5 +1,5 @@
 import test from 'ava';
-import createProxyController from '../../../src/factories/createProxyController';
+import {createProxyController} from '../../../src/factories/createProxyController';
 
 test('sets HTTP_PROXY', (t) => {
   const globalAgentGlobal = createProxyController();

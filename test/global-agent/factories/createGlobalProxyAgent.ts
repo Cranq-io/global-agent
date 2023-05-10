@@ -20,7 +20,7 @@ import getPort from 'get-port';
 import got from 'got';
 import makeRequest from 'request';
 import sinon from 'sinon';
-import createGlobalProxyAgent from '../../../src/factories/createGlobalProxyAgent';
+import {createGlobalProxyAgent} from '../../../src/factories/createGlobalProxyAgent';
 
 type ProxyServerType = {
   port: number,

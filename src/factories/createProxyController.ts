@@ -1,6 +1,6 @@
 import Logger from '../Logger';
 
-type ProxyController = {
+export type ProxyController = {
   HTTP_PROXY: string | null,
   HTTPS_PROXY: string | null,
   NO_PROXY: string | null,
@@ -16,12 +16,12 @@ const KNOWN_PROPERTY_NAMES = [
   'NO_PROXY',
 ];
 
-export default (): ProxyController => {
+export function createProxyController (initValue?: ProxyController): ProxyController {
   // eslint-disable-next-line fp/no-proxy
   return new Proxy({
-    HTTP_PROXY: null,
-    HTTPS_PROXY: null,
-    NO_PROXY: null,
+    HTTP_PROXY: initValue?.HTTP_PROXY || null,
+    HTTPS_PROXY: initValue?.HTTPS_PROXY || null,
+    NO_PROXY: initValue?.NO_PROXY || null,
   }, {
     set: (subject, name, value) => {
       if (typeof name !== 'string') {
