@@ -92,5 +92,5 @@
     "create-readme": "gitdown ./.README/README.md --output-file ./README.md"
   },
   "typings": "./dist/index.d.ts",
-  "version": "3.4.0"
+  "version": "3.5.0"
 }
