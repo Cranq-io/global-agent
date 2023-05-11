@@ -91,6 +91,9 @@
     "test": "ava --verbose --serial",
     "create-readme": "gitdown ./.README/README.md --output-file ./README.md"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "typings": "./dist/index.d.ts",
-  "version": "3.5.0"
+  "version": "3.5.1"
 }
