@@ -154,6 +154,9 @@ abstract class Agent {
     // > are also accepted:
     // >   ca, cert, ciphers, clientCertEngine, crl, dhparam, ecdhCurve, honorCipherOrder,
     // >   key, passphrase, pfx, rejectUnauthorized, secureOptions, secureProtocol, servername, sessionIdContext.
+
+    const rejectUnauthorized = ('rejectUnauthorized' in configuration && configuration.rejectUnauthorized) ?? this.rejectUnauthorized ?? true;
+
     if (configuration.secureEndpoint) {
       connectionConfiguration.tls = {
         ca: configuration.ca,
@@ -167,11 +170,15 @@ abstract class Agent {
         key: configuration.key,
         passphrase: configuration.passphrase,
         pfx: configuration.pfx,
-        rejectUnauthorized: configuration.rejectUnauthorized ?? this.rejectUnauthorized ?? true,
+        rejectUnauthorized,
         secureOptions: configuration.secureOptions,
         secureProtocol: configuration.secureProtocol,
         servername: configuration.servername ?? connectionConfiguration.host,
         sessionIdContext: configuration.sessionIdContext,
+      };
+    } else {
+      connectionConfiguration.tls = {
+        rejectUnauthorized,
       };
     }
 
