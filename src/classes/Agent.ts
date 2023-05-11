@@ -51,18 +51,22 @@ abstract class Agent {
 
   public socketConnectionTimeout: number;
 
+  public rejectUnauthorized?: boolean;
+
   public constructor (
     isProxyConfigured: IsProxyConfiguredMethodType,
     mustUrlUseProxy: MustUrlUseProxyMethodType,
     getUrlProxy: GetUrlProxyMethodType,
     fallbackAgent: AgentType,
     socketConnectionTimeout: number,
+    rejectUnauthorized?: boolean,
   ) {
     this.fallbackAgent = fallbackAgent;
     this.isProxyConfigured = isProxyConfigured;
     this.mustUrlUseProxy = mustUrlUseProxy;
     this.getUrlProxy = getUrlProxy;
     this.socketConnectionTimeout = socketConnectionTimeout;
+    this.rejectUnauthorized = rejectUnauthorized;
   }
 
   public abstract createConnection (configuration: ConnectionConfigurationType, callback: ConnectionCallbackType): void;
@@ -163,23 +167,12 @@ abstract class Agent {
         key: configuration.key,
         passphrase: configuration.passphrase,
         pfx: configuration.pfx,
-        rejectUnauthorized: configuration.rejectUnauthorized ?? true,
+        rejectUnauthorized: configuration.rejectUnauthorized ?? this.rejectUnauthorized ?? true,
         secureOptions: configuration.secureOptions,
         secureProtocol: configuration.secureProtocol,
         servername: configuration.servername ?? connectionConfiguration.host,
         sessionIdContext: configuration.sessionIdContext,
       };
-
-      // This is not ideal because there is no way to override this setting using `tls` configuration if `NODE_TLS_REJECT_UNAUTHORIZED=0`.
-      // However, popular HTTP clients (such as https://github.com/sindresorhus/got) come with pre-configured value for `rejectUnauthorized`,
-      // which makes it impossible to override that value globally and respect `rejectUnauthorized` for specific requests only.
-      if (
-        // eslint-disable-next-line node/no-process-env
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED === '0'
-      ) {
-        // @ts-expect-error seems like we are using wrong guard for this change that does not align with secureEndpoint
-        connectionConfiguration.tls.rejectUnauthorized = false;
-      }
     }
 
     this.createConnection(connectionConfiguration, (error, socket) => {

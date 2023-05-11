@@ -19,9 +19,9 @@ const KNOWN_PROPERTY_NAMES = [
 export function createProxyController (initValue?: ProxyController): ProxyController {
   // eslint-disable-next-line fp/no-proxy
   return new Proxy({
-    HTTP_PROXY: initValue?.HTTP_PROXY || null,
-    HTTPS_PROXY: initValue?.HTTPS_PROXY || null,
-    NO_PROXY: initValue?.NO_PROXY || null,
+    HTTP_PROXY: initValue?.HTTP_PROXY ?? null,
+    HTTPS_PROXY: initValue?.HTTPS_PROXY ?? null,
+    NO_PROXY: initValue?.NO_PROXY ?? null,
   }, {
     set: (subject, name, value) => {
       if (typeof name !== 'string') {
@@ -46,4 +46,4 @@ export function createProxyController (initValue?: ProxyController): ProxyContro
       return true;
     },
   });
-};
+}

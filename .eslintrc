@@ -17,6 +17,9 @@
     "import/no-cycle": 0,
     "no-continue": 0,
     "no-restricted-syntax": 0,
+    "func-style": 0,
+    "id-match": 0,
+    "node/no-process-env": 0,
     "no-unused-expressions": [
       2,
       {

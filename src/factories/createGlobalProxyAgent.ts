@@ -24,8 +24,12 @@ import {
   isUrlMatchingNoProxy,
   parseProxyUrl,
 } from '../utilities';
-import {createProxyController} from './createProxyController';
-import {ProxyController} from './createProxyController';
+import type {
+  ProxyController,
+} from './createProxyController';
+import {
+  createProxyController,
+} from './createProxyController';
 
 const httpGet = http.get;
 const httpRequest = http.request;
@@ -39,16 +43,17 @@ const log = Logger.child({
 const defaultConfigurationInput = {
   environmentVariableNamespace: undefined,
   forceGlobalAgent: undefined,
+  rejectUnauthorized: true,
   socketConnectionTimeout: 60_000,
 };
 
 const createConfiguration = (configurationInput: ProxyAgentConfigurationInputType): ProxyAgentConfigurationType => {
-  // eslint-disable-next-line node/no-process-env
   const environment = process.env;
 
   const defaultConfiguration = {
     environmentVariableNamespace: typeof environment.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE === 'string' ? environment.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE : 'GLOBAL_AGENT_',
     forceGlobalAgent: typeof environment.GLOBAL_AGENT_FORCE_GLOBAL_AGENT === 'string' ? parseBoolean(environment.GLOBAL_AGENT_FORCE_GLOBAL_AGENT) : true,
+    rejectUnauthorized: typeof environment.NODE_TLS_REJECT_UNAUTHORIZED === 'string' ? parseBoolean(environment.NODE_TLS_REJECT_UNAUTHORIZED) : undefined,
     socketConnectionTimeout: typeof environment.GLOBAL_AGENT_SOCKET_CONNECTION_TIMEOUT === 'string' ? Number.parseInt(environment.GLOBAL_AGENT_SOCKET_CONNECTION_TIMEOUT, 10) : defaultConfigurationInput.socketConnectionTimeout,
   };
 
@@ -58,14 +63,13 @@ const createConfiguration = (configurationInput: ProxyAgentConfigurationInputTyp
   };
 };
 
-
-export function createGlobalProxyAgent(configurationInput: ProxyAgentConfigurationInputType = defaultConfigurationInput, _proxyController?: ProxyController) {
+export function createGlobalProxyAgent (configurationInput: ProxyAgentConfigurationInputType = defaultConfigurationInput, _proxyController?: ProxyController) {
   const configuration = createConfiguration(configurationInput);
 
-  const proxyController: ProxyController = _proxyController || createProxyController({
+  const proxyController: ProxyController = _proxyController ?? createProxyController({
     HTTP_PROXY: process.env[configuration.environmentVariableNamespace + 'HTTP_PROXY'] ?? null,
     HTTPS_PROXY: process.env[configuration.environmentVariableNamespace + 'HTTPS_PROXY'] ?? null,
-    NO_PROXY: process.env[configuration.environmentVariableNamespace + 'NO_PROXY'] ?? null
+    NO_PROXY: process.env[configuration.environmentVariableNamespace + 'NO_PROXY'] ?? null,
   });
 
   log.info({
@@ -113,6 +117,7 @@ export function createGlobalProxyAgent(configurationInput: ProxyAgentConfigurati
         getUrlProxy(getHttpProxy),
         http.globalAgent,
         configuration.socketConnectionTimeout,
+        configuration.rejectUnauthorized,
       );
     }
   };
@@ -133,6 +138,7 @@ export function createGlobalProxyAgent(configurationInput: ProxyAgentConfigurati
         getUrlProxy(getHttpsProxy),
         https.globalAgent,
         configuration.socketConnectionTimeout,
+        configuration.rejectUnauthorized,
       );
     }
   };
@@ -175,4 +181,4 @@ export function createGlobalProxyAgent(configurationInput: ProxyAgentConfigurati
   }
 
   return proxyController;
-};
+}
