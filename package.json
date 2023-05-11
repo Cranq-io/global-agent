@@ -54,8 +54,8 @@
     "husky": "^7.0.1",
     "nyc": "^15.1.0",
     "pem": "^1.14.4",
+    "release-it": "^15.10.3",
     "request": "^2.88.2",
-    "semantic-release": "^17.4.4",
     "sinon": "^11.1.2",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
@@ -89,11 +89,21 @@
     "build": "del-cli ./dist && tsc -p tsconfig.build.json",
     "lint": "eslint ./src ./test && tsc",
     "test": "ava --verbose --serial",
-    "create-readme": "gitdown ./.README/README.md --output-file ./README.md"
+    "create-readme": "gitdown ./.README/README.md --output-file ./README.md",
+    "prepublishOnly": "npm run build",
+    "release": "release-it --ci"
   },
   "files": [
     "dist/**/*"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "typings": "./dist/index.d.ts",
-  "version": "3.5.1"
+  "version": "3.5.3",
+  "release-it": {
+    "github": {
+      "release": true
+    }
+  }
 }
