@@ -3,12 +3,21 @@ import {
   UnexpectedStateError,
 } from '../errors';
 
+const DIGIT_ONLY_REGEX = /^(?:\d+\.){3}\d+$/;
+
 export default (subjectUrl: string, noProxy: string) => {
   const subjectUrlTokens = new URL(subjectUrl);
 
   const rules = noProxy.split(/[\s,]+/);
 
   for (const rule of rules) {
+    // 特殊处理 DIGIT_ONLY 符号
+    if (rule.startsWith('DIGIT_ONLY')) {
+      const [, port] = rule.split(':');
+
+      return DIGIT_ONLY_REGEX.test(subjectUrlTokens.hostname) && (port ? subjectUrlTokens.port === port : true);
+    }
+
     const ruleMatch = rule
       .replace(/^(?<leadingDot>\.)/, '*')
       .match(/^(?<hostname>.+?)(?::(?<port>\d+))?$/);

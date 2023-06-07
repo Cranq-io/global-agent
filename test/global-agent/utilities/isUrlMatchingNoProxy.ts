@@ -60,3 +60,11 @@ test('returns `true` if hosts match in one of multiple rules separated with a co
 test('returns `true` if hosts match in one of multiple rules separated with a space', (t) => {
   t.assert(isUrlMatchingNoProxy('http://foo.com/', 'bar.org foo.com baz.io'));
 });
+
+test('digit only hostname', (t) => {
+  t.false(isUrlMatchingNoProxy('http://30.1.250.1/', 'a.com'));
+  t.assert(isUrlMatchingNoProxy('http://30.1.250.1/', 'DIGIT_ONLY'));
+  t.false(isUrlMatchingNoProxy('http://30.1.250.1/', 'DIGIT_ONLY:8080'));
+  t.assert(isUrlMatchingNoProxy('http://30.1.250.1:8080/', 'DIGIT_ONLY:8080'));
+  t.false(isUrlMatchingNoProxy('http://30.1.250.1:8070/', 'DIGIT_ONLY:8080'));
+});
