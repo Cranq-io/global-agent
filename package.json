@@ -100,7 +100,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "typings": "./dist/index.d.ts",
-  "version": "3.5.4",
+  "version": "3.5.5",
   "release-it": {
     "github": {
       "release": true
