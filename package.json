@@ -94,7 +94,8 @@
     "release": "release-it --ci"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "bootstrap.js"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
