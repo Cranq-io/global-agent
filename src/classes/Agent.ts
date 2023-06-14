@@ -113,9 +113,9 @@ abstract class Agent {
     if (this.protocol === 'http:') {
       request.path = requestUrl;
 
-      if (proxy.authorization) {
-        request.setHeader('proxy-authorization', 'Basic ' + Buffer.from(proxy.authorization).toString('base64'));
-      }
+    }
+    if (proxy.authorization) {
+      request.setHeader('proxy-authorization', 'Basic ' + Buffer.from(proxy.authorization).toString('base64'));
     }
 
     log.trace({
